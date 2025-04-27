@@ -1,124 +1,107 @@
 
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import { Button } from "./button";
-import { Phone } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 
 const Header = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
-    <header className="w-full border-b bg-background">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="text-2xl font-bold text-primary">
-          ЮрКонсультант
-        </Link>
-        
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link to="/">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Главная
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Услуги</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  {services.map((service) => (
-                    <ListItem
-                      key={service.title}
-                      title={service.title}
-                      href={service.href}
-                    >
-                      {service.description}
-                    </ListItem>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            
-            <NavigationMenuItem>
-              <Link to="/about">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  О компании
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            
-            <NavigationMenuItem>
-              <Link to="/contacts">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Контакты
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        
-        <Button variant="outline" className="flex items-center gap-2">
-          <Phone className="h-4 w-4" />
-          <span>+7 (999) 123-45-67</span>
-        </Button>
+    <header className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Логотип */}
+          <Link to="/" className="flex items-center">
+            <span className="text-xl font-bold text-blue-900">ЮристПро</span>
+          </Link>
+
+          {/* Десктопное меню */}
+          <nav className="hidden md:flex space-x-8">
+            <NavLinks />
+          </nav>
+
+          {/* Кнопка связи */}
+          <div className="hidden md:flex items-center">
+            <Button asChild variant="outline" className="mr-4">
+              <a href="tel:+79991234567">+7 (999) 123-45-67</a>
+            </Button>
+            <Button asChild>
+              <Link to="/contacts">Связаться</Link>
+            </Button>
+          </div>
+
+          {/* Мобильное меню кнопка */}
+          <div className="md:hidden">
+            <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {/* Мобильное меню */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t">
+          <div className="container mx-auto px-4 py-3">
+            <nav className="flex flex-col space-y-4">
+              <NavLinks mobile onClick={toggleMobileMenu} />
+              <div className="flex flex-col space-y-2 pt-2 border-t">
+                <Button asChild variant="outline" className="justify-start">
+                  <a href="tel:+79991234567">+7 (999) 123-45-67</a>
+                </Button>
+                <Button asChild>
+                  <Link to="/contacts" onClick={toggleMobileMenu}>Связаться</Link>
+                </Button>
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
 
-type ListItemProps = {
-  className?: string;
-  title: string;
-  href: string;
-  children: React.ReactNode;
-};
+interface NavLinksProps {
+  mobile?: boolean;
+  onClick?: () => void;
+}
 
-const ListItem = ({ className, title, children, href }: ListItemProps) => {
+const NavLinks: React.FC<NavLinksProps> = ({ mobile, onClick }) => {
+  const linkClassName = mobile
+    ? "block py-2 text-gray-800 hover:text-blue-700"
+    : "text-gray-800 hover:text-blue-700";
+
+  const handleClick = () => {
+    if (onClick) onClick();
+  };
+
   return (
-    <li>
-      <NavigationMenuLink asChild>
-        <Link
-          to={href}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </Link>
-      </NavigationMenuLink>
-    </li>
+    <>
+      <Link to="/" className={linkClassName} onClick={handleClick}>
+        Главная
+      </Link>
+      <Link to="/services" className={linkClassName} onClick={handleClick}>
+        Услуги
+      </Link>
+      <Link to="/about" className={linkClassName} onClick={handleClick}>
+        О компании
+      </Link>
+      <Link to="/team" className={linkClassName} onClick={handleClick}>
+        Команда
+      </Link>
+      <Link to="/blog" className={linkClassName} onClick={handleClick}>
+        Блог
+      </Link>
+      <Link to="/contacts" className={linkClassName} onClick={handleClick}>
+        Контакты
+      </Link>
+    </>
   );
 };
-
-const services = [
-  {
-    title: "Юридические консультации",
-    href: "/services/consultations",
-    description: "Профессиональные консультации по всем юридическим вопросам",
-  },
-  {
-    title: "Подготовка документов",
-    href: "/services/documents",
-    description: "Составление и проверка юридических документов любой сложности",
-  },
-  {
-    title: "Представительство в суде",
-    href: "/services/court",
-    description: "Защита интересов клиентов в судебных инстанциях",
-  },
-];
 
 export default Header;

@@ -5,7 +5,7 @@ import Hero from "@/components/Hero";
 import ServiceCard from "@/components/ServiceCard";
 import Testimonials from "@/components/Testimonials";
 import { Button } from "@/components/ui/button";
-import { Scale, FileText, Users } from "lucide-react";
+import { Scale, FileText, Users, Building, BookOpen, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -44,6 +44,24 @@ const Index = () => {
                 description="Защита интересов клиентов во всех судебных инстанциях"
                 icon={<Scale className="h-6 w-6 text-primary" />}
                 href="/services/court"
+              />
+              <ServiceCard 
+                title="Корпоративное право" 
+                description="Полное юридическое сопровождение бизнеса"
+                icon={<Building className="h-6 w-6 text-primary" />}
+                href="/services/corporate"
+              />
+              <ServiceCard 
+                title="Договорное право" 
+                description="Разработка, анализ и сопровождение договоров"
+                icon={<BookOpen className="h-6 w-6 text-primary" />}
+                href="/services/contracts"
+              />
+              <ServiceCard 
+                title="Защита интеллектуальной собственности" 
+                description="Регистрация и защита объектов интеллектуальной собственности"
+                icon={<ShieldCheck className="h-6 w-6 text-primary" />}
+                href="/services/intellectual"
               />
             </div>
             
